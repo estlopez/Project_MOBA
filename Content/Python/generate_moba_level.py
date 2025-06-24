@@ -2,7 +2,7 @@ import unreal
 
 # Load Blueprint classes
 turret_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/AutoTurretAsset/TurretAssetFiles/Blueprints/BaseTurret_perception")
-minion_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/BP_MinionSpawn")
+minion_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/BP_Minion")
 lane_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/BP_Lane")
 player_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/PlayerBlueprints/BP_TopDownCharacter")
 

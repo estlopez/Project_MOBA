@@ -1,26 +1,26 @@
 import unreal
 
-turret_bp = unreal.EditorAssetLibrary.load_blueprint_class(
-    "/Game/AutoTurretAsset/TurretAssetFiles/Blueprints/BaseTurret_perception")
-team_enum = unreal.load_object(None, "/Game/Blueprints/ENum_TeamID.ENum_TeamID")
-turret_marker_class = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/BP_TurretSpawnPoint")
+# Blueprint asset paths
+TURRET_BP_PATH = "/Game/AutoTurretAsset/TurretAssetFiles/Blueprints/BaseTurret_perception.BaseTurret_perception"
+TURRET_MARKER_PATH = "/Game/PlaceHolders/BP_TurretSpawnPoint.BP_TurretSpawnPoint"
 
-turret_index = 0
+# Load the turret blueprint class
+turret_class = unreal.EditorAssetLibrary.load_blueprint_class(TURRET_BP_PATH)
 
-for marker in unreal.EditorLevelLibrary.get_all_level_actors():
-    if not marker.is_a(turret_marker_class):
-        continue
+# Get all actors in the level
+all_actors = unreal.EditorLevelLibrary.get_all_level_actors()
 
-    location = marker.get_actor_location()
-    turret = unreal.EditorLevelLibrary.spawn_actor_from_class(turret_bp, location)
-    turret.set_actor_label(f"GeneratedTurret_{turret_index}")
+# Loop through and find all turret marker actors
+for actor in all_actors:
+    if actor.get_class().get_name() == "BP_TurretSpawnPoint_C":
+        location = actor.get_actor_location()
+        rotation = actor.get_actor_rotation()
 
-    if turret.has_property("TeamID"):
-        turret.set_editor_property("TeamID", unreal.get_enum_value_by_name(team_enum, "Team2"))
-    if turret.has_property("FireInterval_BetweenShots"):
-        turret.set_editor_property("FireInterval_BetweenShots", 1.0)
-    if turret.has_property("LookAtSpeed"):
-        turret.set_editor_property("LookAtSpeed", 5.0)
+        # Spawn turret at the marker's position
+        spawned_turret = unreal.EditorLevelLibrary.spawn_actor_from_class(turret_class, location, rotation)
 
-    unreal.log(f"✅ Turret #{turret_index} placed at {location}")
-    turret_index += 1
+        if spawned_turret:
+            unreal.log(f"✅ Spawned Turret at {location}")
+        else:
+            unreal.log_warning(f"⚠️ Failed to spawn turret at {location}")
+

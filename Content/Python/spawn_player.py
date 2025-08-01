@@ -1,20 +1,17 @@
 import unreal
 
-player_bp = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/PlayerBlueprints/BP_TopDownCharacter")
-player_marker_class = unreal.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/BP_PlayerStartMarker")
+# Path to the player character blueprint
+player_bp_path = "/Game/Blueprints/PlayerBlueprints/BP_TopDownCharacter.BP_TopDownCharacter"
 
-player_index = 0
+# Load the Blueprint
+player_bp = unreal.EditorAssetLibrary.load_blueprint_class(player_bp_path)
 
-for marker in unreal.EditorLevelLibrary.get_all_level_actors():
-    if not marker.is_a(player_marker_class):
-        continue
+if not player_bp:
+    unreal.log_error(f"❌ Could not load blueprint: {player_bp_path}")
+else:
+    # Get the Class Default Object (CDO)
+    cdo = unreal.get_default_object(player_bp)
 
-    location = marker.get_actor_location()
-    player = unreal.EditorLevelLibrary.spawn_actor_from_class(player_bp, location)
-    player.set_actor_label(f"GeneratedPlayer_{player_index}")
-
-    if player.has_property("auto_possess_player"):
-        player.set_editor_property("auto_possess_player", unreal.AutoPossessPlayer.PLAYER0)
-
-    unreal.log(f"✅ Player #{player_index} spawned at {location}")
-    player_index += 1
+    # Set Auto Possess Player to Player 0
+    cdo.set_editor_property("auto_possess_player", unreal.AutoPossessPlayer.PLAYER0)
+    unreal.log("✅ Set Auto Possess Player to Player 0 for BP_TopDownCharacter.")
